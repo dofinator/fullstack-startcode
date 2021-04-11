@@ -61,12 +61,12 @@ class FriendsFacade {
     }
     const hashedpw = await bcrypt.hash(friend.password, BCRYPT_ROUNDS);
     const f = { ...friend, password: hashedpw };
-    //console.log({...f})
+
     const uFriend = await this.friendCollection.updateOne(
       { email: email },
       { $set: { ...f } }
     );
-    //console.log({...f})
+
     return uFriend;
   }
 
@@ -100,6 +100,9 @@ class FriendsFacade {
     const friend = await this.friendCollection.findOne({
       email: friendEmail,
     });
+    if (friend == null) {
+      throw new ApiError("No person found with given email");
+    }
     return friend;
   }
 

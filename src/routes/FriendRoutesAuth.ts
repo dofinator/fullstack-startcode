@@ -63,8 +63,8 @@ router.put("/editme", async function (req: any, res, next) {
       throw new ApiError("This endpoint requires authentication", 500);
     }
     const email = req.credentials.userName;
-    const result = await facade.editFriend(email, req.body)
-    res.json(result.modifiedCount)
+    const result = await facade.editFriend(email, req.body);
+    res.json(result.modifiedCount);
   } catch (err) {
     debug(err);
     if (err instanceof ApiError) {
@@ -80,10 +80,10 @@ router.delete("/delete", async function (req: any, res, next) {
     if (!USE_AUTHENTICATION) {
       throw new ApiError("This endpoint requires authentication", 500);
     }
-    const email = req.credentials.userName; 
-    
+    const email = req.credentials.userName;
+
     const result = await facade.deleteFriend(email);
-    
+
     res.json(result);
   } catch (err) {
     debug(err);
@@ -113,14 +113,12 @@ router.get("/me", async (req: any, res, next) => {
 
 //An admin user can fetch everyone
 router.get("/find-user/:email", async (req: any, res, next) => {
-  if (
-    !USE_AUTHENTICATION &&
-    req.credentials.role !== "admin"
-  ) {
-    throw new ApiError("Not Authorized", 401);
-  }
-  const userEmail = req.params.email;
   try {
+    if (USE_AUTHENTICATION && req.credentials.role !== "admin") {
+      throw new ApiError("Not Authorized", 401);
+    }
+    const userEmail = req.params.email;
+
     const friend = await facade.getFriend(userEmail);
     if (friend == null) {
       throw new ApiError("user not found", 404);
@@ -129,7 +127,9 @@ router.get("/find-user/:email", async (req: any, res, next) => {
     const friendDTO = { firstName, lastName, email };
     res.json(friendDTO);
   } catch (err) {
-    next(err);
+    if (err instanceof ApiError) {
+      return next(err);
+    }
   }
 });
 
@@ -144,9 +144,9 @@ router.put("/:email", async function (req: any, res, next) {
       throw new ApiError("Not Authorized", 401);
     }
     const userEmail = req.params.email;
-    const result = await facade.editFriend(userEmail, req.body)
+    const result = await facade.editFriend(userEmail, req.body);
     let newFriend = req.body;
-    res.json({modified: result.modifiedCount, user: newFriend })
+    res.json({ modified: result.modifiedCount, user: newFriend });
   } catch (err) {
     debug(err);
     if (err instanceof ApiError) {

@@ -121,8 +121,7 @@ describe("## Verify the Friends Facade ##", () => {
       expect(user.firstName).to.be.equal("Donald");
     });
     it("It should not find xxx.@.b.dk", async () => {
-      const user = await facade.getFriend("xxx.@.b.dk");
-      expect(user).to.be.null;
+      expect(facade.getFriend("xxx.@.b.dk")).to.be.rejectedWith(ApiError, "No person found with given email");
     });
   });
 
@@ -138,7 +137,10 @@ describe("## Verify the Friends Facade ##", () => {
     });
 
     it("It should NOT validate a non-existing users credentials", async () => {
-      const veriefiedPeter = await facade.getVerifiedUser("dick@ost.dk", "secret2");
+      const veriefiedPeter = await facade.getVerifiedUser(
+        "dick@ost.dk",
+        "secret2"
+      );
       expect(veriefiedPeter).to.be.null;
     });
   });
