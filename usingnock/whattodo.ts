@@ -20,14 +20,9 @@ app.get("/nameinfo/:name", async (req, res) => {
     ),
     fetch(`https://api.agify.io?name=${paramName}`).then((res) => res.json()),
   ]);
-  console.log(result);
-  const [
-    { gender },
-    {
-      country: [{ country_id }],
-    },
-    { age },
-  ] = result;
+  console.log(result );
+  const [{ gender },{country: [{ country_id }]},{ age }] = result;
+  console.log(gender, country_id, age)
   res.json({ gender, country_id, age });
 });
 

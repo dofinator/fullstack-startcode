@@ -100,8 +100,8 @@ router.get("/me", async (req: any, res, next) => {
     if (!USE_AUTHENTICATION) {
       throw new ApiError("This endpoint requires authentication", 500);
     }
-    const email = req.credentials.userName; //GET THE USERS EMAIL FROM SOMEWHERE (req.params OR req.credentials.userName)
-    //console.log(email);
+    const email = req.credentials.userName;
+
     const me = await facade.getFriend(email);
     res.json(me);
   } catch (err) {

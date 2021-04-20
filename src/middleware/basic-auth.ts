@@ -27,7 +27,7 @@ async function check(userName: string, pass: string, req: any) {
   const verifiedUser = await facade.getVerifiedUser(userName, pass);
   //if (user && compare(pass, user.password)) {
   if (verifiedUser) {
-    req.credentials = { userName: verifiedUser?.email, role: "user" };
+    req.credentials = { userName: verifiedUser?.email, role: verifiedUser.role};
     return true;
   }
   return false;
