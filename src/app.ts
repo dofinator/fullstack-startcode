@@ -14,6 +14,8 @@ const app = express();
 
 app.use(express.json());
 
+const USE_AUTHENTICATION = !process.env.SKIP_AUTHENTICATION;
+
 app.use((req, res, next) => {
   debug(new Date().toLocaleDateString(), req.method, req.originalUrl, req.ip);
   next();
@@ -31,7 +33,7 @@ app.use("/graphql", (req, res, next) => {
   if (body && body.operationName && body.query.includes("IntrospectionQuery")) {
     return next();
   }
-  if (body.query && (body.mutation || body.query)) {
+  if (USE_AUTHENTICATION && body.query && (body.mutation || body.query)) {
     return authMiddleware(req, res, next);
   }
   next();

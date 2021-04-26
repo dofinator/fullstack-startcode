@@ -1,30 +1,29 @@
-import { makeExecutableSchema } from 'graphql-tools';
-import { resolvers } from './resolvers';
+import { makeExecutableSchema } from "graphql-tools";
+import { resolvers } from "./resolvers";
 
 const typeDefs = `
     type Friend {
         id: ID
         firstName: String
         lastName: String
+        gender: Gender
         email: String
         role: String
+
+    }
+
+    enum Gender {
+        MALE
+        FEMALE
+        OTHER
     }
     
     """
     Queries available for Friends
     """
      type Query {
-        """
-        Returns all details for all Friends
-        (Should probably require 'admin' rights if your are using authentication)
-        """
-        getAllFriends : [Friend]!
-        """
-        Only required if you ALSO wan't to try a version where the result is fetched from the existing endpoint
-        """
-        getAllFriendsProxy: [Friend]!
-
-        getFriendFromEmail(input: String): Friend
+        getFriendByEmail(input: String): Friend
+        allFriends: [Friend]!
         
     }
     input FriendInput {
@@ -32,24 +31,17 @@ const typeDefs = `
         lastName: String!
         password: String!
         email: String!
+        gender: Gender!
     }
-    input FriendEditInput {
-        firstName: String
-        lastName: String
-        password: String
-        email: String!
-    }
-    type Mutation {
-        """
-        Allows anyone (non authenticated users) to create a new friend
-        """
-        createFriend(input: FriendInput): Friend
-       
-        editFriend(input: FriendEditInput): Friend
+    
 
-        deleteFriend(input: String): Boolean
-        
+    type Mutation {
+        createFriend(input: FriendInput): Friend
+        updateFriend(input: FriendInput): Friend
+        deleteFriend(id: ID!): String
     }
+        
+    
 `;
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });

@@ -12,7 +12,7 @@ const USER_INPUT_SCHEMA = Joi.object({
   lastName: Joi.string().min(2).max(50).required(),
   password: Joi.string().min(4).max(30).required(),
   email: Joi.string().email().required(),
-  // role: Joi.string().valid("user", "admin").required(),
+  gender: Joi.string().required()
 });
 
 const USER_INPUT_EDIT_SCHEMA = Joi.object({

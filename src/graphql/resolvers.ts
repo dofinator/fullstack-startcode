@@ -21,46 +21,46 @@ export function setupFacade(db: any) {
 // resolver map
 export const resolvers = {
   Query: {
-    getAllFriends: (root: any, _: any, req: any) => {
+    allFriends: (root: any, _: any, req: any) => {
       console.log(req.credentials);
-      if (
-        !req.credentials ||
-        !req.credentials.role ||
-        req.credentials.role !== "admin"
-      ) {
-        throw new ApiError("Not Authorized", 401);
-      }
+      // if (
+      //   !req.credentials ||
+      //   !req.credentials.role ||
+      //   req.credentials.role !== "admin"
+      // ) {
+      //   throw new ApiError("Not Authorized", 401);
+      // }
 
       return friendFacade.getAllFriendsV2();
     },
-    getFriendFromEmail: async (_: object, { input }: { input: string }) => {
+    getFriendByEmail: async (_: object, { input }: { input: string }) => {
       return friendFacade.getFriendFromEmail(input);
     },
 
-    getAllFriendsProxy: async (root: object, _: any, context: Request) => {
-      let options: any = { method: "GET" };
+    // getAllFriendsProxy: async (root: object, _: any, context: Request) => {
+    //   let options: any = { method: "GET" };
 
-      //This part only required if authentication is required
-      const auth = context.get("authorization");
-      if (auth) {
-        options.headers = { authorization: auth };
-      }
-      return fetch(
-        `http://localhost:${process.env.PORT}/api/friends/all`,
-        options
-      ).then((r) => {
-        if (r.status >= 400) {
-          throw new Error(r.statusText);
-        }
-        return r.json();
-      });
-    },
+    //   //This part only required if authentication is required
+    //   const auth = context.get("authorization");
+    //   if (auth) {
+    //     options.headers = { authorization: auth };
+    //   }
+    //   return fetch(
+    //     `http://localhost:${process.env.PORT}/api/friends/all`,
+    //     options
+    //   ).then((r) => {
+    //     if (r.status >= 400) {
+    //       throw new Error(r.statusText);
+    //     }
+    //     return r.json();
+    //   });
+    // },
   },
   Mutation: {
     createFriend: async (_: object, { input }: { input: IFriend }) => {
       return friendFacade.addFriendV2(input);
     },
-    editFriend: async (_: object, { input }: { input: IFriend }) => {
+    updateFriend: async (_: object, { input }: { input: IFriend }) => {
       return friendFacade.editFriendV2(input.email, input);
     },
     deleteFriend: async (_: object, { input }: { input: string }) => {

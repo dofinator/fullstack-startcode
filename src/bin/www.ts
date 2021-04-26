@@ -11,5 +11,5 @@ const PORT = process.env.PORT || 3333;
   app.set("db", db);
   app.set("db-type", "REAL");
   app.listen(PORT, () => debug(`Server started, listening on PORT: ${PORT}`));
-  setupFacade(db)
+  setupFacade(db);
 })();
